@@ -177,7 +177,7 @@
 
 > **Architecture Diagram**
 
-(Architecture.png »ğÀÔ)
+![alt text](image.png)
 
 ---
 
