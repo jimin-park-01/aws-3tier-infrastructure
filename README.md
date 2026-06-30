@@ -1,6 +1,6 @@
 # AWS High Availability 3-Tier Web Infrastructure
 
-> AWS 기반의 고가용성 3-Tier(Web?WAS?DB) 아키텍처를 구축하고, Apache · Tomcat · Amazon RDS를 연동하여 Spring PetClinic 애플리케이션을 배포한 팀 프로젝트입니다.
+> AWS 기반의 고가용성 3-Tier(Web-WAS-DB) 아키텍처를 구축하고, Apache HTTP Server, Apache Tomcat, Amazon RDS를 연계하여 Spring PetClinic 애플리케이션을 배포한 팀 프로젝트입니다.
 
 <div align="center">
 
@@ -29,9 +29,9 @@
 
 등을 함께 고려한 인프라 설계가 필요합니다.
 
-본 프로젝트에서는 AWS 환경에서 **High Availability 3-Tier Architecture**를 구축하고, Apache Web Server, Tomcat WAS, Amazon RDS를 연동하여 Spring PetClinic 서비스를 운영 가능한 형태로 배포하는 것을 목표로 하였습니다.
+본 프로젝트에서는 AWS 환경에서 **High Availability 3-Tier Architecture**를 구축하고, Apache HTTP Server, Apache Tomcat, Amazon RDS를 연동하여 Spring PetClinic 서비스를 운영 가능한 형태로 배포하는 것을 목표로 하였습니다.
 
-또한 Auto Scaling, CloudWatch, Load Balancer 등을 적용하여 운영 환경을 고려한 인프라를 구현하였습니다.
+또한 Auto Scaling, CloudWatch, Load Balancer 등을 적용하여 운영 환경에서 요구되는 확장성, 가용성 및 모니터링을 고려한 인프라를 구현하였습니다.
 
 ---
 
@@ -43,20 +43,19 @@
 * ALB/NLB 기반 트래픽 분산
 * Auto Scaling 기반 확장성 확보
 * CloudWatch 기반 운영 모니터링
-* Spring PetClinic 배포
+* Spring PetClinic 애플리케이션 배포
 
 ---
 
 # Project Information
 
-| Category    | Description                                 |
-| ----------- | ------------------------------------------- |
-| Project     | AWS High Availability 3-Tier Infrastructure |
-| Type        | Team Project (5 Members)                    |
-| Duration    | 3 Weeks                                     |
-| Position    | Team Leader                                 |
-| Domain      | Cloud Infrastructure                        |
-| Environment | AWS                                         |
+| Category | Description |
+|----------|-------------|
+| Project | AWS High Availability 3-Tier Infrastructure |
+| Type | Team Project (5 Members) |
+| Duration | 3 Weeks |
+| Domain | Cloud Infrastructure |
+| Environment | AWS |
 
 ---
 
@@ -66,11 +65,11 @@
 
 * AWS IAM 사용자 및 권한 정책 구성
 * AWS 3-Tier(Web-WAS-DB) 인프라 구축
-* Apache Web Server 구축
+* Apache HTTP Server 구축
 * Apache Reverse Proxy 구성
-* Apache ↔ Tomcat 연동
-* ALB 및 NLB 기반 서비스 구성
-* Spring PetClinic 배포
+* Apache HTTP Server ↔ Apache Tomcat 연동
+* ALB 및 NLB 구성 및 연동
+* Spring PetClinic 애플리케이션 배포
 
 ## Monitoring & Reliability
 
@@ -84,7 +83,7 @@
 * 프로젝트 일정 관리
 * 인프라 구축 일정 조율
 * 팀원 역할 분배
-* 프로젝트 최종 통합 및 발표
+* 프로젝트 최종 통합 테스트 및 발표
 
 ---
 
@@ -96,6 +95,7 @@
 * Application Load Balancer
 * Network Load Balancer
 * Auto Scaling
+* Health Check
 
 ---
 
@@ -104,10 +104,10 @@
 * IAM 기반 접근 제어
 * Security Group 구성
 * Private Subnet 기반 WAS / DB 분리
-* Session Manager를 활용한 안전한 서버 접근
+* Session Manager 기반 안전한 서버 접근
 * Secrets Manager를 활용한 민감 정보 관리
 
-> Session Manager 및 Secrets Manager는 프로젝트 기능으로 구현되었으며 팀원과 협업하여 완성하였습니다.
+> Session Manager와 Secrets Manager는 프로젝트 전체 인프라 구성의 일부로 팀 협업을 통해 적용하였습니다.
 
 ---
 
@@ -115,16 +115,16 @@
 
 * Amazon CloudWatch
 * Health Check
-* Auto Scaling Monitoring
-* Resource Monitoring
+* Auto Scaling 상태 모니터링 
+* EC2 리소스 모니터링
 
 ---
 
-## Delivery
+## Deployment
 
-* Spring PetClinic Application 배포
-* Apache Reverse Proxy 기반 서비스 제공
-* Amazon RDS 연동
+* Spring PetClinic 애플리케이션 배포
+* Apache Reverse Proxy 기반 서비스 요청 라우팅
+* Amazon RDS 기반 데이터베이스 연동
 
 ---
 
@@ -133,22 +133,32 @@
 ## Cloud
 
 * AWS EC2
-* VPC
-* Internet Gateway
-* NAT Gateway
-* Public / Private Subnet
-* Route Table
-* Security Group
-* Application Load Balancer
-* Network Load Balancer
 * Amazon RDS
 * IAM
 * CloudWatch
 * Auto Scaling
 * Route53
 * CloudFront
-* Session Manager
-* Secrets Manager
+
+---
+
+## Networking
+
+* Amazon VPC
+* Public / Private Subnet
+* Internet Gateway
+* NAT Gateway
+* Route Table
+* Security Group
+* Application Load Balancer (ALB)
+* Network Load Balancer (NLB)
+
+---
+
+## Operations
+
+* AWS Systems Manager Session Manager
+* AWS Secrets Manager
 
 ---
 
@@ -177,7 +187,28 @@
 
 > **Architecture Diagram**
 
-![alt text](image.png)
+![AWS 3-Tier Architecture](images/01-architecture.png)
+
+---
+
+# Monitoring
+
+> **CloudWatch Dashboard**
+
+![CloudWatch Dashboard](images/02-cloudwatch-dashboard.png)
+
+CloudWatch Dashboard를 구축하여 EC2 CPU 사용률, Network I/O,
+Application Load Balancer 응답 시간, Auto Scaling 상태 등을 실시간으로 모니터링하였습니다.
+
+---
+
+# Performance Validation
+
+> **Load Test (k6)**
+
+![Load Test](images/03-loadtest-k6-result.png)
+
+k6를 이용한 부하 테스트를 수행하여 Auto Scaling 정책과 서비스 안정성을 검증하였습니다.
 
 ---
 
@@ -200,7 +231,7 @@ Application Load Balancer
 
 ↓
 
-Apache Web Server
+Apache HTTP Server (Reverse Proxy)
 
 ↓
 
@@ -208,13 +239,24 @@ Network Load Balancer
 
 ↓
 
-Tomcat WAS
+Apache Tomcat
 
 ↓
 
 Amazon RDS
 ```
 
-서비스 요청은 ALB를 통해 Web Layer로 전달되며, Apache Reverse Proxy를 이용하여 내부 WAS 계층으로 라우팅됩니다.
+Application Load Balancer를 통해 수신된 요청은 Apache HTTP Server(Reverse Proxy)에서 처리된 후,
+Network Load Balancer를 거쳐 Apache Tomcat으로 전달됩니다.
 
-WAS는 Amazon RDS와 통신하여 데이터를 처리하며, Auto Scaling과 CloudWatch를 통해 서비스의 확장성과 안정성을 확보하였습니다.
+Apache Tomcat은 Amazon RDS와 연동하여 데이터를 처리하며,
+Auto Scaling을 통해 확장성을 확보하고 CloudWatch를 이용하여 서비스 상태와 리소스를 지속적으로 모니터링하였습니다.
+
+---
+
+# Lessons Learned
+
+- 3-Tier Architecture를 직접 구축하며 계층 분리와 네트워크 흐름을 이해할 수 있었다.
+- Auto Scaling과 CloudWatch를 적용하여 운영 환경에서의 확장성과 모니터링의 중요성을 경험하였다.
+- 인프라 구축뿐 아니라 운영 및 성능 검증까지 수행하며 실제 서비스 환경을 고려한 시스템 설계 경험을 쌓을 수 있었다.
+- 팀 프로젝트를 진행하며 인프라 구축뿐 아니라 역할 분담, 일정 관리 및 협업의 중요성을 경험하였다.
